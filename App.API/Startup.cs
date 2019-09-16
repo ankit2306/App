@@ -27,6 +27,13 @@ namespace App.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => {
+                options.AddPolicy("DefaultCORS", _ => {
+                    _.AllowAnyHeader();
+                    _.AllowAnyMethod();
+                    _.AllowAnyOrigin();
+                });
+            });
             services.AddDbContext<DataContext>(_ => _.UseSqlite(Configuration.GetConnectionString("Default")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -42,7 +49,7 @@ namespace App.API
             {
                 // app.UseHsts();
             }
-
+            app.UseCors("DefaultCORS");
             app.UseHttpsRedirection();
             app.UseMvc();
         }
