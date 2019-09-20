@@ -15,7 +15,7 @@ namespace App.API.Data
         }
         public async Task<User> Login(string username, string password)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(_  => _.Username == username);
+            var user = await _context.Users.FirstOrDefaultAsync(_  => _.Username == username.ToLower());
             if(user == null){
                 return null;
             }
