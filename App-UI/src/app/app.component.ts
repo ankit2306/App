@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiServiceService } from './api-service.service';
+import { AuthService } from './_services/auth.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-root',
@@ -8,13 +9,14 @@ import { ApiServiceService } from './api-service.service';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private apiService : ApiServiceService) { }
+  jwtHelper = new JwtHelperService();
 
-  items : any = [];
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.apiService.getApiData('http://localhost:5000/api/values').subscribe(_ => {
-      this.items = _;
-    });
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.authService.decodedToken = this.jwtHelper.decodeToken(token);
+    }
   }
 }
