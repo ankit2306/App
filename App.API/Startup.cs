@@ -42,7 +42,10 @@ namespace App.API
                 });
             });
             services.AddDbContext<DataContext>(_ => _.UseSqlite(Configuration.GetConnectionString("Default")));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(opt => {
+                    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(_ => {
                 _.TokenValidationParameters = new TokenValidationParameters
@@ -54,10 +57,12 @@ namespace App.API
                 };
             });
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IAppRepository,AppRepository>();
+            services.AddTransient<Seed>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seedr)
         {
             if (env.IsDevelopment())
             {
@@ -79,8 +84,9 @@ namespace App.API
                 });
                 // app.UseHsts();
             }
+            //seedr.SeedUsers();
             app.UseCors("DefaultCORS");
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
         }
