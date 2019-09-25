@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Http;
 
 namespace App.API.Helper
@@ -9,6 +10,15 @@ namespace App.API.Helper
             response.Headers.Add("Application-Error", message);
             response.Headers.Add("Access-Control-Expose-Headers", "Application-Error");
             response.Headers.Add("Access-Control-Allow-Origin", "*");
+        }
+
+        public static int CalculateAge(this DateTime dateTime)
+        {
+            var age = DateTime.Now.Year - dateTime.Year;
+            if(dateTime.AddYears(age) > DateTime.Now)
+                age--;
+
+            return age;
         }
     }
 }

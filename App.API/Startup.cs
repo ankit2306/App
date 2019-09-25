@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using App.API.Data;
 using App.API.Helper;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -41,6 +42,7 @@ namespace App.API
                     _.AllowAnyOrigin();
                 });
             });
+            services.AddAutoMapper();
             services.AddDbContext<DataContext>(_ => _.UseSqlite(Configuration.GetConnectionString("Default")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddJsonOptions(opt => {
